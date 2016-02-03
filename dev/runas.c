@@ -179,38 +179,25 @@ int main(int argc, char *argv[]){
   char* origUser;
   char* runas = argv[1]; // user to be run as
   char* program = argv[2];
-  char* args = argv[3]; //char *const argv[]
   long uid = -1;
   long gid = -1;
   pid_t  pid, wpid;
   int exit_status, set_uid_status;
   int exec_result;
   printf("arg[2]: %s\n arg[3]: %s\n arg[4]: %s\n", argv[2], argv[3], argv[4]);
-  exec_result = execvp(program, &argv[2]);
-  exit(1);
 
   origUser = getUser(origUID);
 
   if(validateUser(runas, &uid, &gid)){
     if(validatePassword(origUser, runas)) {
-//      printf("Authentication successful.\n");
-//      printf("effective user id: %d\n", geteuid());
-//      printf("user id: %d\n", getuid());
-
-      //magic happens here
       pid = fork();
 
       if(!pid){ //child
         set_uid_status = setuid(uid); //never use setuid at first because you cannot regain root privileges.
-        // Actually, for security purposes, I believe i should use setuid so that no program passed can just gain root again.
 
         if(!set_uid_status){
-          printf("New uid: %d.\n", getuid());
-//          char* test[] = {"ls", "-a", NULL};
-//          exec_result = execvp("echo", test);
-
-//          exec_result = execvp(program, args);
-          exec_result = execvp(program, &program);
+//          printf("New uid: %d.\n", getuid());
+          exec_result = execvp(program, &argv[2]);
 
           if(exec_result == -1){
             printf("Error: execvp returned -1.\n");
@@ -228,6 +215,9 @@ int main(int argc, char *argv[]){
         else{
           printf("Child's exit status was %d\n", exit_status);
           //now do the log.
+          //will need to use realID because effective ID is always root.
+          //realID will signify who's the user running runas
+          //too tired, will do tomorrow.
         }
       }
     }
