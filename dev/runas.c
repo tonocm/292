@@ -174,12 +174,12 @@ char* getUser(long origUID){
 }
 
 int main(int argc, char *argv[]){
-//  char* woringDir = getenv("PWD");
   long origUID = getuid(); //geteuid for effective user
   long origGID = getgid(); //getegid for effective group
   char* origUser;
   char* runas = argv[1]; // user to be run as
   char* program = argv[2];
+  //use strncopy if i need to make array argv[2...length];
   char* args = argv[3]; //char *const argv[]
   long uid = -1;
   long gid = -1;
@@ -202,9 +202,9 @@ int main(int argc, char *argv[]){
         // Actually, for security purposes, I believe i should use setuid so that no program passed can just gain root again.
 
         if(!set_uid_status){
-          printf("New euid: %d.\n", geteuid());
+          printf("New uid: %d.\n", getuid());
           char* test[] = {"ls", "-a", NULL};
-          exec_result = execvp("echo", test);
+//          exec_result = execvp("echo", test);
 
           exec_result = execvp(program, args);
 
