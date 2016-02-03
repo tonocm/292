@@ -179,10 +179,12 @@ int main(int argc, char *argv[]){
   char* origUser;
   char* runas = argv[1]; // user to be run as
   char* program = argv[2];
-  char* args = argv[3];
+  char* args = argv[3]; //char *const argv[]
   long uid = -1;
   long gid = -1;
-
+  pid_t  pid, wpid;
+  int exit_status, set_uid_status;
+  int exec_result;
   origUser = getUser(origUID);
 
   if(validateUser(runas, &uid, &gid)){
@@ -190,6 +192,35 @@ int main(int argc, char *argv[]){
       printf("Authentication successful.\n");
       printf("effective user id: %d\n", geteuid());
       printf("user id: %d\n", getuid());
+
+      //magic happens here
+      pid = fork();
+
+      if(!pid){ //child
+        set_uid_status = seteuid(uid); //never use setuid at first because you cannot regain root privileges.
+
+        if(!set_uid_status){
+          printf("New euid: %d.\n", geteuid());
+          exec_result = execvp(program, args);
+
+          if(exec_result == -1){
+            printf("Error: execvp returned -1.\n");
+            exit(EXIT_FAILURE);
+          }
+        }
+      }
+      else{ //parent
+        wpid = wait(&status); //wait for fork
+
+        if(wpid == -1){
+          printf("Error: wait() returned with -1.\n");
+          exit(EXIT_FAILURE);
+        }
+        else{
+          printf("Child's exit status was %d\n", exit_status);
+          //now do the log.
+        }
+      }
     }
     else{
       printf("Error: Invalid password.\n");
