@@ -186,7 +186,7 @@ int main(int argc, char *argv[]){
   int exit_status, set_uid_status;
   int exec_result;
   printf("arg[2]: %s\n arg[3]: %s\n arg[4]: %s\n", argv[2], argv[3], argv[4]);
-  exec_result = execvp(program, &argv[3]);
+  exec_result = execvp(program, &argv[2]);
   exit(1);
 
   origUser = getUser(origUID);
