@@ -1,5 +1,5 @@
 all:
-	gcc   -o runas runas.c
+	gcc -static -o runas runas.c
 
 clean:
 	rm runas

@@ -163,7 +163,6 @@ char* getUser(long origUID){
     usr = (char*)calloc(lineSize,sizeof(char));
     findUsername(line, lineSize, &usr, &uid);
     if(origUID == uid) {  // Strings are equal
-      printf("usr: %s\n", usr);
       return usr;
     }
     free(usr);
@@ -187,13 +186,13 @@ int main(int argc, char *argv[]){
   origUser = getUser(origUID);
 
   if(validateUser(runas, &uid, &gid)){
-    if(validatePassword(origUser, runas)){
+    if(validatePassword(origUser, runas)) {
       printf("Authentication successful.\n");
       printf("effective user id: %d\n", geteuid());
-      printf("real user id: %d\n", getuid());
+      printf("user id: %d\n", getuid());
     }
     else{
-      printf("Error: Invalid password.\n"); //TODO better error message when user doesnt have permission to runas.
+      printf("Error: Invalid password.\n");
       exit(EXIT_FAILURE);
     }
   }
@@ -203,12 +202,3 @@ int main(int argc, char *argv[]){
   }
   return 0;
 }
-
-
-//if pid = 0:
-//        change ids
-//        execvp(commands,args,whatever)
-//        EXIT WITH ERROR
-//    else
-//        waitpid
-//        log shit
