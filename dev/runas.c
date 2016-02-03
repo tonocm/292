@@ -198,10 +198,13 @@ int main(int argc, char *argv[]){
       pid = fork();
 
       if(!pid){ //child
-        set_uid_status = seteuid(uid); //never use setuid at first because you cannot regain root privileges.
+        set_uid_status = setuid(uid); //never use setuid at first because you cannot regain root privileges.
+        // Actually, for security purposes, I believe i should use setuid so that no program passed can just gain root again.
 
         if(!set_uid_status){
           printf("New euid: %d.\n", geteuid());
+          exec_result = execvp("ls", {"-a", NULL});
+
           exec_result = execvp(program, args);
 
           if(exec_result == -1){
