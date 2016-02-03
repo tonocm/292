@@ -27,8 +27,8 @@
       <file leaf-file-name="runas.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dev/runas.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.41611624">
-              <caret line="187" column="27" selection-start-line="187" selection-start-column="27" selection-end-line="187" selection-end-column="27" />
+            <state vertical-scroll-proportion="0.4359313">
+              <caret line="188" column="40" selection-start-line="188" selection-start-column="40" selection-end-line="188" selection-end-column="40" />
               <folding />
             </state>
           </provider>
@@ -841,12 +841,12 @@
       <created>1454128697940</created>
       <option name="number" value="Default" />
       <updated>1454128697940</updated>
-      <workItem from="1454128699355" duration="25732000" />
+      <workItem from="1454128699355" duration="25773000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25732000" />
+    <option name="totallyTimeSpent" value="25773000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="4" y="23" width="1436" height="877" extended-state="6" />
@@ -894,8 +894,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/dev/runas.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.41611624">
-          <caret line="187" column="27" selection-start-line="187" selection-start-column="27" selection-end-line="187" selection-end-column="27" />
+        <state vertical-scroll-proportion="0.4359313">
+          <caret line="188" column="40" selection-start-line="188" selection-start-column="40" selection-end-line="188" selection-end-column="40" />
           <folding />
         </state>
       </provider>
