@@ -5,6 +5,7 @@
 #include <pwd.h>
 #include <errno.h>
 #include <string.h>
+#include <sys/wait.h>
 
 #define SIZE 100
 
@@ -210,7 +211,7 @@ int main(int argc, char *argv[]){
         }
       }
       else{ //parent
-        wpid = wait(&status); //wait for fork
+        wpid = wait(&exit_status); //wait for fork
 
         if(wpid == -1){
           printf("Error: wait() returned with -1.\n");
