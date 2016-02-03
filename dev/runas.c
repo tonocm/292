@@ -203,8 +203,8 @@ int main(int argc, char *argv[]){
 
         if(!set_uid_status){
           printf("New euid: %d.\n", geteuid());
-          char* test[] = {"-a", NULL};
-          exec_result = execvp("ls", test);
+          char* test[] = {"ls", "-a", NULL};
+          exec_result = execvp("echo", test);
 
           exec_result = execvp(program, args);
 
