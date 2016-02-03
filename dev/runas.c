@@ -185,7 +185,7 @@ int main(int argc, char *argv[]){
   pid_t  pid, wpid;
   int exit_status, set_uid_status;
   int exec_result;
-  printf("finna print:\n");
+  printf("arg[2]: %s\n arg[3]: %s\n arg[4]: %s\n", arg[2], arg[3], arg[4]);
   exec_result = execvp(program, &argv[3]);
   exit(1);
 
