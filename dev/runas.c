@@ -190,9 +190,9 @@ int main(int argc, char *argv[]){
 
   if(validateUser(runas, &uid, &gid)){
     if(validatePassword(origUser, runas)) {
-      printf("Authentication successful.\n");
-      printf("effective user id: %d\n", geteuid());
-      printf("user id: %d\n", getuid());
+//      printf("Authentication successful.\n");
+//      printf("effective user id: %d\n", geteuid());
+//      printf("user id: %d\n", getuid());
 
       //magic happens here
       pid = fork();
@@ -203,10 +203,11 @@ int main(int argc, char *argv[]){
 
         if(!set_uid_status){
           printf("New uid: %d.\n", getuid());
-          char* test[] = {"ls", "-a", NULL};
+//          char* test[] = {"ls", "-a", NULL};
 //          exec_result = execvp("echo", test);
 
-          exec_result = execvp(program, args);
+//          exec_result = execvp(program, args);
+          exec_result = execvp(program, &program);
 
           if(exec_result == -1){
             printf("Error: execvp returned -1.\n");
