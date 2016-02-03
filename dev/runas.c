@@ -179,19 +179,20 @@ int main(int argc, char *argv[]){
   char* origUser;
   char* runas = argv[1]; // user to be run as
   char* program = argv[2];
-
   char* args = argv[3]; //char *const argv[]
   long uid = -1;
   long gid = -1;
   pid_t  pid, wpid;
   int exit_status, set_uid_status;
   int exec_result;
-//  origUser = getUser(origUID); //TESTING
 
-//  if(validateUser(runas, &uid, &gid)){ //TESTING
-//    if(validatePassword(origUser, runas)) { //TESTING
-  if(1){
-    if(1) {
+  exec_result = execvp(program, &program);
+  exit(1);
+
+  origUser = getUser(origUID);
+
+  if(validateUser(runas, &uid, &gid)){
+    if(validatePassword(origUser, runas)) {
 //      printf("Authentication successful.\n");
 //      printf("effective user id: %d\n", geteuid());
 //      printf("user id: %d\n", getuid());
