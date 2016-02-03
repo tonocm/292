@@ -186,10 +186,10 @@ int main(int argc, char *argv[]){
   pid_t  pid, wpid;
   int exit_status, set_uid_status;
   int exec_result;
-  origUser = getUser(origUID);
+//  origUser = getUser(origUID); //TESTING
 
-//  if(validateUser(runas, &uid, &gid)){
-//    if(validatePassword(origUser, runas)) {
+//  if(validateUser(runas, &uid, &gid)){ //TESTING
+//    if(validatePassword(origUser, runas)) { //TESTING
   if(1){
     if(1) {
 //      printf("Authentication successful.\n");
