@@ -199,8 +199,9 @@ int main(int argc, char *argv[]){
       pid = fork();
 
       if(!pid){ //child
-        set_uid_status = setuid(uid); //never use setuid at first because you cannot regain root privileges.
         set_gid_status = setgid(gid); //never use setuid at first because you cannot regain root privileges.
+        set_uid_status = setuid(uid); //never use setuid at first because you cannot regain root privileges.
+//        set_gid_status = setgid(gid); //never use setuid at first because you cannot regain root privileges.
 
         printf("uid: %d. gid: %d\n", getuid(), getgid());
 
