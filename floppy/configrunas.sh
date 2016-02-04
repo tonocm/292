@@ -1,5 +1,8 @@
 #!/bin/sh
 
+echo 'a' > pwdNobody
+echo 'b' > pwdFTP
+
 cd /etc/
 
 echo 'root:nobody:a' > runas
