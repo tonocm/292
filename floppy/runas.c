@@ -170,13 +170,13 @@ int validatePassword(char* user1, char* user2){
 //    read(STDIN_FILENO, buffer, 100);
     pass = &buffer[0];
 
-    for(int i=0; i < 100; i++){
-        printf("%c", pass[i]);
-        if(pass[i] == NULL){
-          pass[i] = '\0';
-          break;
-        }
-    }
+//    for(int i=0; i < 100; i++){
+//        printf("%c", pass[i]);
+//        if(pass[i] == NULL){
+//          pass[i] = '\0';
+//          break;
+//        }
+//    }
     printf("pass: %s", pass);
 //    printf( "stdin is a file or a pipe\n");
   }
