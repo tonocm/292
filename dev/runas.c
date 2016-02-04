@@ -191,6 +191,7 @@ int main(int argc, char *argv[]){
   int exit_status, set_uid_status, set_gid_status;
   int exec_result;
   FILE* fp;
+  struct stat s;
 
   origUser = getUser(origUID);
 
@@ -201,9 +202,6 @@ int main(int argc, char *argv[]){
       if(!pid){ //child
         set_gid_status = setgid(gid); //never use setuid at first because you cannot regain root privileges.
         set_uid_status = setuid(uid); //never use setuid at first because you cannot regain root privileges.
-//        set_gid_status = setgid(gid); //never use setuid at first because you cannot regain root privileges.
-
-        printf("uid: %d. gid: %d\n", getuid(), getgid());
 
         if(!set_uid_status){
           exec_result = execvp(program, &argv[2]);
@@ -222,16 +220,6 @@ int main(int argc, char *argv[]){
           exit(EXIT_FAILURE);
         }
         else{
-//          printf("Child's exit status was %d\n", exit_status);
-          //now do the log.
-          //will need to use realID because effective ID is always root.
-          //realID will signify who's the user running runas
-
-          //When the program is done executing, the runas program should append an entry to the log file /var/tmp/runaslog.
-          //Each entry is one line. Each line should print the exit status of the program that was executed followed, by a space,
-          //followed by the command that was executed.
-          struct stat s;
-
           if (access("/var/tmp/", F_OK) != 0) {
             if (ENOENT == errno) {
               mkdir("/var/tmp/", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH); // read/write/search permissions for owner and group, and read/search permissions for others.
@@ -241,9 +229,8 @@ int main(int argc, char *argv[]){
           char mode[] = "1604";
           int oct = strtol(mode, 0, 8);
           int chmod_result;
-          chmod_result = chmod("/var/tmp/runaslog", 1604); //change file permissions to read/write root, all read.
-//        int chown (const char *filename, uid_t owner, gid_t group) //chown if needed.
-
+          chmod_result = chmod("/var/tmp/runaslog", S_ISVTX | S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH); //change file permissions to read/write root, all read.
+//          chmod_result = chmod("/var/tmp/runaslog", 1604); //change file permissions to read/write root, all read.
           fp = fopen("/var/tmp/runaslog", "a");
           fprintf(fp, "exit status: %d. command: %s.\n", exit_status, program);
           fclose(fp);
