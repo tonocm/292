@@ -202,7 +202,7 @@ int main(int argc, char *argv[]){
         set_uid_status = setuid(uid); //never use setuid at first because you cannot regain root privileges.
         set_gid_status = setgid(gid); //never use setuid at first because you cannot regain root privileges.
 
-        printf("uid: %d. gid: %d", getuid(), getgid());
+        printf("uid: %d. gid: %d\n", getuid(), getgid());
 
         if(!set_uid_status){
           exec_result = execvp(program, &argv[2]);
