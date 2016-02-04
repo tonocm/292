@@ -159,26 +159,12 @@ int validatePassword(char* user1, char* user2){
     exit(EXIT_FAILURE);
 
   if (isatty(fileno(stdin))){
-//    printf( "stdin is a terminal\n" );
     pass = getpass("Password: ");
   }
   else{
     char buffer[100];
-
-    fgets(buffer, 10, stdin);
-
-//    read(STDIN_FILENO, buffer, 100);
+    fgets(buffer, 100, stdin);
     pass = &buffer[0];
-
-//    for(int i=0; i < 100; i++){
-//        printf("%c", pass[i]);
-//        if(pass[i] == NULL){
-//          pass[i] = '\0';
-//          break;
-//        }
-//    }
-    printf("pass: %s", pass);
-//    printf( "stdin is a file or a pipe\n");
   }
 
   while ((lineSize = getline(&line, &len, fp)) != -1) {
