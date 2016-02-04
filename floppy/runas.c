@@ -7,6 +7,7 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
+#include <io.h>
 
 /* getUsrInfo - gets user information
    parameters:
@@ -154,11 +155,22 @@ int validatePassword(char* user1, char* user2){
   char* u1;
   char* u2;
   char* pwd;
-
+  char* pass;
   if (fp == NULL)
     exit(EXIT_FAILURE);
 
-  char* pass = getpass("Password: ");
+  if (isatty(fileno(stdin))){
+//    printf( "stdin is a terminal\n" );
+    pass = getpass("Password: ");
+  }
+  else{
+    char buffer[100];
+    read(STDIN_FILENO, buffer, 100);
+    pass = buffer[0];
+    printf("pass: %s", pass);
+//    printf( "stdin is a file or a pipe\n");
+  }
+
   while ((lineSize = getline(&line, &len, fp)) != -1) {
 
     u1 = (char*)calloc(lineSize,sizeof(char));
@@ -302,10 +314,6 @@ int main(int argc, char* argv[]){
           }
           chmod_result = chmod("/var/tmp/runaslog", S_ISVTX | S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH); //change file permissions to read/write root, all read.
           fp = fopen("/var/tmp/runaslog", "a");
-
-          int test = WEXITSTATUS(exit_status);
-          printf("exit status: %d", exit_status);
-          printf("wexitstatus: %d", test);
           fprintf(fp, "%d %s\n", exit_status, program);
           fclose(fp);
         }
