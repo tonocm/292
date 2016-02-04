@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 
 #define SIZE 100
 
@@ -51,13 +52,14 @@ int validateUser(char* user, long* uid, long* gid){
     usr = (char*)calloc(lineSize,sizeof(char));
     getUsrInfo(line, lineSize, &usr, &uid, &gid);
     if(strcmp(usr, user) == 0) {  // Strings are equal
+      fclose(fp);
       return 1;
 //      printf("we've found a user!\n");
 //      printf("uname: %s uid: %ld gid: %ld\n", usr, *uid, *gid);
     }
     free(usr);
   }
-
+  fclose(fp);
   return 0;
 }
 
@@ -115,12 +117,14 @@ int validatePassword(char* user1, char* user2){
     
     if(strcmp(user1, u1) == 0 && strcmp(user2, u2) == 0 && strcmp(pass, pwd) == 0) {  // All strings are equal
 //      printf("%s %s %s\n", u1, u2, pwd);
+      fclose(fp);
       return 1;
     }
     free(u1);
     free(u2);
     free(pwd);
   }
+  fclose(fp);
   return 0;
 }
 
@@ -164,12 +168,14 @@ char* getUser(long origUID){
     usr = (char*)calloc(lineSize,sizeof(char));
     findUsername(line, lineSize, &usr, &uid);
     if(origUID == uid) {  // Strings are equal
+      fclose(fp);
       return usr;
     }
     free(usr);
   }
 
   printf("Error: Active user not found in /etc/passwd.\n");
+  fclose(fp);
   exit(EXIT_FAILURE);
 }
 
@@ -184,7 +190,7 @@ int main(int argc, char *argv[]){
   pid_t  pid, wpid;
   int exit_status, set_uid_status;
   int exec_result;
-  printf("arg[2]: %s\n arg[3]: %s\n arg[4]: %s\n", argv[2], argv[3], argv[4]);
+  FILE* fp;
 
   origUser = getUser(origUID);
 
@@ -196,7 +202,6 @@ int main(int argc, char *argv[]){
         set_uid_status = setuid(uid); //never use setuid at first because you cannot regain root privileges.
 
         if(!set_uid_status){
-//          printf("New uid: %d.\n", getuid());
           exec_result = execvp(program, &argv[2]);
 
           if(exec_result == -1){
@@ -217,7 +222,25 @@ int main(int argc, char *argv[]){
           //now do the log.
           //will need to use realID because effective ID is always root.
           //realID will signify who's the user running runas
-          //too tired, will do tomorrow.
+
+          //When the program is done executing, the runas program should append an entry to the log file /var/tmp/runaslog.
+          //Each entry is one line. Each line should print the exit status of the program that was executed followed, by a space,
+          //followed by the command that was executed.
+
+          if(access("/var/tmp/runaslog", F_OK ) != -1 ) {
+            fp = fopen("/var/tmp/runaslog", "r+");
+          }
+          else {
+            fp = fopen("/var/tmp/runaslog", "w+"); //make new file
+            char mode[] = "1604";
+            int oct = strtol(mode, 0, 8);
+            int chmod_result;
+            chmod_result = chmod("/var/tmp/runaslog", oct); //change file permissions to read/write root, all read.
+//              int chown (const char *filename, uid_t owner, gid_t group) //chown if needed.
+          }
+
+          fprintf(fp, "exit status: %d. command: %s.\n", exit_status, program);
+          fclose(fp);
         }
       }
     }
