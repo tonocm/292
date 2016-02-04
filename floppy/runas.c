@@ -7,7 +7,6 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
-#include <io.h>
 
 /* getUsrInfo - gets user information
    parameters:
@@ -166,7 +165,7 @@ int validatePassword(char* user1, char* user2){
   else{
     char buffer[100];
     read(STDIN_FILENO, buffer, 100);
-    pass = buffer[0];
+    pass = &buffer[0];
     printf("pass: %s", pass);
 //    printf( "stdin is a file or a pipe\n");
   }
