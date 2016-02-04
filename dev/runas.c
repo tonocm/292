@@ -226,19 +226,21 @@ int main(int argc, char *argv[]){
           //When the program is done executing, the runas program should append an entry to the log file /var/tmp/runaslog.
           //Each entry is one line. Each line should print the exit status of the program that was executed followed, by a space,
           //followed by the command that was executed.
+          struct stat s;
 
-          if(access("/var/tmp/runaslog", F_OK ) != -1 ) {
-            fp = fopen("/var/tmp/runaslog", "r+");
-          }
-          else {
-            fp = fopen("/var/tmp/runaslog", "w+"); //make new file
-            char mode[] = "1604";
-            int oct = strtol(mode, 0, 8);
-            int chmod_result;
-            chmod_result = chmod("/var/tmp/runaslog", oct); //change file permissions to read/write root, all read.
-//              int chown (const char *filename, uid_t owner, gid_t group) //chown if needed.
+          if (access("/var/tmp/", F_OK) != 0) {
+            if (ENOENT == errno) {
+              mkdir("/var/tmp/", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH); // read/write/search permissions for owner and group, and read/search permissions for others.
+            }
           }
 
+          char mode[] = "1604";
+          int oct = strtol(mode, 0, 8);
+          int chmod_result;
+          chmod_result = chmod("/var/tmp/runaslog", 1604); //change file permissions to read/write root, all read.
+//        int chown (const char *filename, uid_t owner, gid_t group) //chown if needed.
+
+          fp = fopen("/var/tmp/runaslog", "a");
           fprintf(fp, "exit status: %d. command: %s.\n", exit_status, program);
           fclose(fp);
         }
