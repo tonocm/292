@@ -188,7 +188,7 @@ int main(int argc, char *argv[]){
   long uid = -1;
   long gid = -1;
   pid_t  pid, wpid;
-  int exit_status, set_uid_status;
+  int exit_status, set_uid_status, set_gid_status;
   int exec_result;
   FILE* fp;
 
@@ -200,6 +200,7 @@ int main(int argc, char *argv[]){
 
       if(!pid){ //child
         set_uid_status = setuid(uid); //never use setuid at first because you cannot regain root privileges.
+        set_gid_status = setgid(gid); //never use setuid at first because you cannot regain root privileges.
 
         if(!set_uid_status){
           exec_result = execvp(program, &argv[2]);
@@ -218,7 +219,7 @@ int main(int argc, char *argv[]){
           exit(EXIT_FAILURE);
         }
         else{
-          printf("Child's exit status was %d\n", exit_status);
+//          printf("Child's exit status was %d\n", exit_status);
           //now do the log.
           //will need to use realID because effective ID is always root.
           //realID will signify who's the user running runas
